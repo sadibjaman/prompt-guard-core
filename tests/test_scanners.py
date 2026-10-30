@@ -111,4 +111,4 @@ def test_secret_detected_in_context_code() -> None:
         
     assert assessment.is_safe == False
     assert assessment.risk_score == 1.0
-    assert assessment.flagged_categories == ["aws_credentials"]r
+    assert assessment.flagged_categories == ["aws_credentials"]
