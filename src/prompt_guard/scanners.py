@@ -12,10 +12,11 @@ class BaseScanner(ABC):
         """Scan a developer prompt request and return a structured assessment."""
         pass
 
+
 class RegexSecretScanner(BaseScanner):
     """Rule-based scanner that detects leaked API keys and destructive commands."""
-    
-    #Class-level dictionaries mapping category names to compiled regex patterns
+
+    # Class-level dictionaries mapping category names to compiled regex patterns
     SECRET_PATTERNS: dict[str, re.Pattern[str]] = {
         # OpenAI-style keys like sk-proj-... or sk-abcde123123...
         "hardcoded_secret": re.compile(r"sk-[a-zA-Z0-9_-]{20,}"),
@@ -35,7 +36,7 @@ class RegexSecretScanner(BaseScanner):
         flagged: list[str] = []
         risk_score: float = 0.0
         full_text: str = request.prompt_text
-        is_safe : bool
+        is_safe: bool
 
         if request.context_code is not None:
             full_text = f"{full_text}\n{request.context_code}"
@@ -50,10 +51,8 @@ class RegexSecretScanner(BaseScanner):
                 flagged.append(category)
                 risk_score = max(risk_score, 0.8)
 
-
         is_safe: bool = len(flagged) == 0
 
-   
-        return GuardrailAssessment(is_safe=is_safe, 
-                                   risk_score=risk_score, 
-                                   flagged_categories=flagged)
+        return GuardrailAssessment(
+            is_safe=is_safe, risk_score=risk_score, flagged_categories=flagged
+        )
